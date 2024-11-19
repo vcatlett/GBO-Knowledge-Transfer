@@ -9,6 +9,7 @@ Sphinx is great for documentation. I used it to make these pages, and we also us
 .. toctree::
    :maxdepth: 1
 
+   extensions
    autobuilds
    diagrams
    docstrings
