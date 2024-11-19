@@ -12,5 +12,6 @@ Welcome to GBO! This section will help you get started.
    housing
    email
    physical_access
+   payroll
    nrao_tools
    sdd_tools

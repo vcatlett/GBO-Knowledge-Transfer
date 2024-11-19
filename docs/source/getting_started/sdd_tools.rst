@@ -13,3 +13,19 @@ Jenkins
 =======
 
 Jenkins is our CI/CD tool. New members of the Software team can be created from the Web interface. For more information, see :ref:`Jenkins <jenkins>`.
+
+
+SDD Calendar
+============
+
+Put vacation and stuff here: https://safe.nrao.edu/wiki/bin/view/GB/Software/SddCalendar
+
+
+SDD Documentation
+=================
+
+Wiki: https://safe.nrao.edu/wiki/bin/view/GB/Software/WebHome
+
+SDDdocs: http://docs.greenbankobservatory.org/software/index.html 
+
+Knowledge Transfer: https://astrocloud.nrao.edu/s/EJGWA77jm5MS3S6 

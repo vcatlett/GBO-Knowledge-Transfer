@@ -1,6 +1,8 @@
-******************
-Setup Instructions
-******************
+.. _sdd_setup:
+
+**********************
+SDD Setup Instructions
+**********************
 
 .. toctree::
    :maxdepth: 1

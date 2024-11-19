@@ -11,9 +11,6 @@ GBO People
 
     Site Director
         Jim Jackson (jmjackso@nrao.edu)
-    
-    SDD Team Lead
-        Dane Sizemore (nsizemor@nrao.edu)
 
     HR Representative
         Karen LaRue (klarue@nrao.edu)
@@ -23,6 +20,21 @@ GBO People
 
     Safety Officer
         Richard Walther (rwalther@nrao.edu)
+
+    SDD: Team Lead
+        Dane Sizemore (nsizemor@nrao.edu)
+
+    SDD: Active Members
+        | Joe Brandt (jbrandt@nrao.edu)
+        | Thomas Chamberlin (tchamber@nrao.edu)
+        | Matthew Harrison (mfharris@nrao.edu)
+        | Paul Marganian (pmargani@nrao.edu)
+        | Kasey Purcell (kpurcell@nrao.edu)
+        | Dane Sizemore (nsizemor@nrao.edu)
+
+    SDD: Former Members
+        | Victoria Catlett (victoria.w.catlett@gmail.com)
+        | Ray Craeger 
 
 Acronyms
 ========
