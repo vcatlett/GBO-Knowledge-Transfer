@@ -84,6 +84,9 @@ html_theme_options = {
 # Paths that contain custom static files
 html_static_path = ["../_static"]
 
+# The favicon
+html_favicon = "../_static/favicon.png"
+
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
