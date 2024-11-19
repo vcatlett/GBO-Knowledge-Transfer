@@ -22,6 +22,6 @@ Contact Information
 
 If you need to reach out to me, the following contact information should be valid indefinitely. 
 
-Email: victoria.w.catlett@gmail.com
+|:email:| victoria.w.catlett@gmail.com
 
-Phone: +1 (214) 471-0922
+|:phone:| +1 (214) 471-0922
