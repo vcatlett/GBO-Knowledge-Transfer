@@ -1,0 +1,8 @@
+:root {
+    --text-font-sans-serif: "Roboto", Helvetica, Arial, sans-serif;
+    --text-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --text-body-font-family: var(--text-font-sans-serif);
+    --text-body-font-size: 1rem;
+    --text-body-font-weight: 400;
+    --text-body-line-height: 1.5;
+}

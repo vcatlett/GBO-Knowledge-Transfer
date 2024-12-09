@@ -1,0 +1,10 @@
+@charset "UTF-8";
+@import "colors.css";
+@import "fonts.css";
+
+QLabel {
+  font-family: var(--text-font-monospace);
+  font-size: 1em;
+  direction: ltr /* rtl:ignore */;
+  unicode-bidi: bidi-override; 
+}
