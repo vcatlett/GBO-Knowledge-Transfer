@@ -1,8 +1,19 @@
 import sys
-from pathlib import Path
+import time
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QHBoxLayout, QLabel, QFrame, QSizePolicy
-from PyQt5.QtCore import QSize, QFile
+from PyQt5.QtWidgets import (
+    QApplication, 
+    QMainWindow, 
+    QWidget, 
+    QGridLayout, 
+    QHBoxLayout, 
+    QLabel, 
+    QFrame, 
+    QSizePolicy
+    )
+from PyQt5.QtCore import QSize, Qt
+
+from get_styles import compile_styles
 
 class MATBox(QWidget):
     """
@@ -18,7 +29,11 @@ class MATBox(QWidget):
         # Initialize MATBox with the properties of QWidget
         super().__init__()
 
-        # Add properties
+        # Add dynamic properties
+        self._status = None
+        self.status = "init"
+
+        # Add static properties
         self.min_height_px = min_height_px
         self.min_width_px = min_height_px
         self.btype = btype
@@ -30,16 +45,26 @@ class MATBox(QWidget):
         # Set the styles
         self._init_styles()
 
+    @property
+    def status(self):
+        """Get the status"""
+        return self._status
+    
+    @status.setter
+    def status(self, value):
+        """Set the status"""
+        allowed_values = ["init", "clear", "warn", "assert"]
+        if value not in allowed_values:
+            raise ValueError(f"Status must be one of {allowed_values}")
+        self._status = value
+        self.setProperty("status", self.status)
+        
     def _init_styles(self):
         """Initialize the styles of the frame"""
-
-        style_path = "styles/main.css"
-        # Set stylesheet
-        self.setStyleSheet(style_path)
+        self.styles = compile_styles()
         self.frame.setMinimumSize(QSize(self.min_width_px, self.min_height_px))
         self.frame.setSizePolicy(
             QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
-        self.set_status()
         
     def _init_layout(self):
         """Initialize the layout of the frame"""
@@ -65,17 +90,11 @@ class MATBox(QWidget):
         self.frame.setFrameShape(QFrame.Box) 
 
     def _init_label(self):
-        self.box_label = QLabel(self.btype.upper())
-
-    def set_status(self, status="init"):
-        if status == "init":
-            self.frame.setStyleSheet("background-color: rgb(80, 80, 80);")
-        elif status == "clear":
-            self.frame.setStyleSheet("background-color: rgb(0, 255, 0);")
-        elif status == "warn":
-            self.frame.setStyleSheet("background-color: rgb(255, 255, 0);")
-        elif status == "assert":
-            self.frame.setStyleSheet("background-color: rgb(255, 0, 0);")
+        self.box_label = QLabel(
+            self.btype.upper(),  # Label text
+            alignment = Qt.AlignmentFlag.AlignCenter,  # Alignment within parent widget
+            )
+        
 
 class MATWidget(QWidget):
     """The MAT widget"""
@@ -111,12 +130,12 @@ class MATWidget(QWidget):
         # Set the spacing between widgets in the layout
         self.main_layout.setSpacing(0)
         # Set the margins of the layout
-        self.main_layout.setContentsMargins(
-            self.pad_left, 
-            self.pad_top, 
-            self.pad_right, 
-            self.pad_bottom
-            ) 
+        # self.main_layout.setContentsMargins(
+        #     self.pad_left, 
+        #     self.pad_top, 
+        #     self.pad_right, 
+        #     self.pad_bottom
+        #     ) 
         # Attach the layout to the widget
         self.setLayout(self.main_layout)
 
@@ -142,6 +161,15 @@ class MATWidget(QWidget):
     def _init_t_widget(self):
         """Make the T (transporter) widget"""
         self.t_widget = MATBox(min_height_px=self.min_height_px, btype="T")
+
+    def fake_status_change(self):
+        """Fake the status of the widgets changing"""
+        time.sleep(1)
+        self.m_widget.status = "clear"
+        time.sleep(1)
+        self.a_widget.status = "warn"
+        time.sleep(1)
+        self.t_widget.status = "assert"
 
 class MainWindow(QMainWindow):
     """The main window of the application"""
@@ -181,11 +209,18 @@ if __name__ == "__main__":
     # Start the app
     app = QApplication(sys.argv)
 
+    # Set global stylesheet
+    style = compile_styles()
+    app.setStyleSheet(style)
+
     # Define an instance of the MainWindow class
     window = MainWindow()
 
     # Tell the window to show itself
     window.show()
 
+    # Fake function to show status changing
+    # window.MAT_widget.fake_status_change()
+    
     # Start the event loop
     sys.exit(app.exec())
