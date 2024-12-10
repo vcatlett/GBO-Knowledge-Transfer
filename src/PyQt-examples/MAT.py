@@ -1,5 +1,5 @@
 import sys
-import time
+from pathlib import Path
 
 from PyQt5.QtWidgets import (
     QApplication, 
@@ -9,11 +9,13 @@ from PyQt5.QtWidgets import (
     QHBoxLayout, 
     QLabel, 
     QFrame, 
-    QSizePolicy
+    QSizePolicy,
     )
 from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QIcon
 
 from get_styles import compile_styles
+from simulations import FakeDevice
 
 class MATBox(QWidget):
     """
@@ -25,9 +27,12 @@ class MATBox(QWidget):
         \"m\", \"a\", or \"t\" (upper or lowercase)
 
     """
-    def __init__(self, min_height_px=50, btype=None):
+    def __init__(self, device: FakeDevice, min_height_px=50, btype="M"):
         # Initialize MATBox with the properties of QWidget
         super().__init__()
+
+        # Load device
+        self._device = device
 
         # Add dynamic properties
         self._status = None
@@ -59,13 +64,31 @@ class MATBox(QWidget):
         self._status = value
         self.setProperty("status", self.status)
         
+    def get_status(self):
+        """Get the current device status"""
+        if self.btype.lower() == "m":
+            self.status = self._device.manager_status
+        elif self.btype.lower() == "a":
+            self.status = self._device.accessor_status
+        elif self.btype.lower() == "t":
+            self.status = self._device.transporter_status
+        else:
+            raise ValueError("btype must be 'm', 'a', or 't'")
+        self.apply_styles()
+        
     def _init_styles(self):
         """Initialize the styles of the frame"""
+        # Load styles (probably don't want to recompile, but whatever, it works)
         self.styles = compile_styles()
-        self.frame.setMinimumSize(QSize(self.min_width_px, self.min_height_px))
-        self.frame.setSizePolicy(
-            QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
-        
+        self.apply_styles()
+        # self.frame.setMinimumSize(QSize(self.min_width_px, self.min_height_px))
+        # self.frame.setSizePolicy(
+        #     QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
+    
+    def apply_styles(self):
+        """Reload the stylesheet"""
+        self.setStyleSheet(self.styles)
+
     def _init_layout(self):
         """Initialize the layout of the frame"""
         # Make the layout for the main widget
@@ -110,6 +133,9 @@ class MATWidget(QWidget):
         self.pad_top = padding
         self.pad_bottom = padding
 
+        # Start the fake device
+        self._init_device()
+        
         # Initialize the main layout of the MATWidget
         self._init_layout()
         # Add content to the main layout
@@ -117,12 +143,27 @@ class MATWidget(QWidget):
         # Set the styles of the QFrame
         self._init_styles()
 
+        # Get updates from the fake device
+        self._init_status_updates()
+    
+    def _init_device(self):
+        """Connect and start the device simulator"""
+        self.device = FakeDevice()
+        self.device.runtime = 10
+        self.device.run_threaded()
+
+    def _init_status_updates(self):
+        """Connect value changes to actions"""
+        self.device.managerChanged.connect(self.m_widget.get_status)
+        self.device.accessorChanged.connect(self.a_widget.get_status)
+        self.device.transporterChanged.connect(self.t_widget.get_status)
+
     def _init_styles(self):
-        """Initialize the styles of the frame"""
+        """Initialize the styles of the widget"""
         self.setMinimumSize(QSize(self.min_width_px, self.min_height_px))
         self.setSizePolicy(
             QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
-        
+
     def _init_layout(self):
         """Initialize the layout of the widget"""
         # Make the layout for the main widget
@@ -152,24 +193,28 @@ class MATWidget(QWidget):
 
     def _init_m_widget(self):
         """Make the M (manager) widget"""
-        self.m_widget = MATBox(min_height_px=self.min_height_px, btype="M")
+        self.m_widget = MATBox(
+            device = self.device, 
+            min_height_px = self.min_height_px, 
+            btype = "M",
+            )
 
     def _init_a_widget(self):
         """Make the A (accessor) widget"""
-        self.a_widget = MATBox(min_height_px=self.min_height_px, btype="A")
+        self.a_widget = MATBox(
+            device = self.device, 
+            min_height_px = self.min_height_px, 
+            btype = "A",
+            )
 
     def _init_t_widget(self):
         """Make the T (transporter) widget"""
-        self.t_widget = MATBox(min_height_px=self.min_height_px, btype="T")
+        self.t_widget = MATBox(
+            device = self.device, 
+            min_height_px = self.min_height_px, 
+            btype = "T",
+            )
 
-    def fake_status_change(self):
-        """Fake the status of the widgets changing"""
-        time.sleep(1)
-        self.m_widget.status = "clear"
-        time.sleep(1)
-        self.a_widget.status = "warn"
-        time.sleep(1)
-        self.t_widget.status = "assert"
 
 class MainWindow(QMainWindow):
     """The main window of the application"""
@@ -178,7 +223,12 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Set the window title
-        self.setWindowTitle("MAT Example")
+        self.setWindowTitle("PyQt Knowledge Transfer Example")
+
+        # Add an icon
+        icon_path = Path(__file__).parent / "static/favicon.ico"
+        self.setWindowIcon(QIcon(str(icon_path)))
+
         # Initialize the main widget and its layout
         self._init_layout()
         # Add content to the main widget
@@ -210,8 +260,8 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # Set global stylesheet
-    style = compile_styles()
-    app.setStyleSheet(style)
+    # style = compile_styles()
+    # app.setStyleSheet(style)
 
     # Define an instance of the MainWindow class
     window = MainWindow()

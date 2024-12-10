@@ -50,65 +50,66 @@ $text-line-height: 1.5;
 // CUSTOM CLASSES /////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-MainWindow {
+.MainWindow {
   background-color: $c-white;
 }
 
 // MATBox
-MATBox > QLabel {
+.MATBox > QLabel {
   color: $c-black;
   font-weight: bold;
 }
 
-MATBox > QFrame {
+.MATBox > QFrame {
   border: 0.1em solid $c-black;
 }
 
-MATBox[status="init"] > QFrame {
+.MATBox[status="init"] > QFrame {
   background-color: $c-status-init;
 }
 
-MATBox[status="clear"] > QFrame {
+.MATBox[status="clear"] > QFrame {
+  background-color: $c-status-clear;
+}
+
+.MATBox[status="warn"] > QFrame {
   background-color: $c-status-warn;
 }
 
-MATBox[status="warn"] > QFrame {
-  background-color: $c-status-warn;
+.MATBox[status="assert"] > QFrame {
+  background-color: $c-status-assert;
 }
 
-MATBox[status="assert"] > QFrame {
-  background-color: $c-status-warn;
-}
-
-MATWidget {
-  background-color: $c-status-init;
-}
+// MATWidget
+// .MATWidget {
+//   background-color: $c-status-init;
+// }
 
 ///////////////////////////////////////////////////////
 // PYQT CLASSES ///////////////////////////////////////
 ///////////////////////////////////////////////////////
 
-.QToolBar * {
-  margin: 0px;
-  padding: 0px;
-}
+// .QToolBar * {
+//   margin: 0px;
+//   padding: 0px;
+// }
 
-.QWidget {
-  // background-color: $c-black;
-  border: 0px solid #455364;
-  padding: 0px;
-  color: #DFE1E2;
-  selection-background-color: #346792;
-  selection-color: #DFE1E2;
-}
+// .QWidget {
+//   // background-color: $c-black;
+//   border: 0px solid #455364;
+//   padding: 0px;
+//   color: #DFE1E2;
+//   selection-background-color: #346792;
+//   selection-color: #DFE1E2;
+// }
 
-.QWidget:disabled {
-  background-color: #19232D;
-  color: #788D9C;
-  selection-background-color: #26486B;
-  selection-color: #788D9C;
-}
+// .QWidget:disabled {
+//   background-color: #19232D;
+//   color: #788D9C;
+//   selection-background-color: #26486B;
+//   selection-color: #788D9C;
+// }
 
-.QWidget::item:selected {
-  background-color: #346792;
-}
+// .QWidget::item:selected {
+//   background-color: #346792;
+// }
