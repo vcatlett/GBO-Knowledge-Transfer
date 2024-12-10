@@ -264,6 +264,7 @@ class MainWindow(QMainWindow):
         self.MAT_widget = MATWidget()
 
 if __name__ == "__main__":
+    
     # Start the app
     app = QApplication(sys.argv)
 
