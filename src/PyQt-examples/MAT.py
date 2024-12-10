@@ -14,10 +14,12 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon
 
+from widgets import AspectWidget
 from get_styles import compile_styles
 from simulations import FakeDevice
+from static.styles.palette import *
 
-class MATBox(QWidget):
+class MATBox(AspectWidget):
     """
     Individual box within the MAT widget
 
@@ -29,7 +31,7 @@ class MATBox(QWidget):
     """
     def __init__(self, device: FakeDevice, min_height_px=50, btype="M"):
         # Initialize MATBox with the properties of QWidget
-        super().__init__()
+        super().__init__(ratio=1)
 
         # Load device
         self._device = device
@@ -82,12 +84,19 @@ class MATBox(QWidget):
         self.styles = compile_styles()
         self.apply_styles()
         # self.frame.setMinimumSize(QSize(self.min_width_px, self.min_height_px))
-        # self.frame.setSizePolicy(
-        #     QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
+        # self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
     
     def apply_styles(self):
         """Reload the stylesheet"""
-        self.setStyleSheet(self.styles)
+        if self.status == "init":
+            self.setStyleSheet(f"background-color: {C_STATUS_INIT}")
+        if self.status == "clear":
+            self.setStyleSheet(f"background-color: {C_STATUS_CLEAR}")
+        if self.status == "warn":
+            self.setStyleSheet(f"background-color: {C_STATUS_WARN}")
+        if self.status == "assert":
+            self.setStyleSheet(f"background-color: {C_STATUS_ASSERT}")
+        # self.setStyleSheet(self.styles)
 
     def _init_layout(self):
         """Initialize the layout of the frame"""
@@ -119,11 +128,11 @@ class MATBox(QWidget):
             )
         
 
-class MATWidget(QWidget):
+class MATWidget(AspectWidget):
     """The MAT widget"""
-    def __init__(self, min_height_px=50, padding=10):
+    def __init__(self, min_height_px=50, padding=0):
         # Initialize MATWidget with the properties of QWidget
-        super().__init__()
+        super().__init__(ratio=3)
 
         # Add properties
         self.min_height_px = min_height_px
@@ -161,8 +170,7 @@ class MATWidget(QWidget):
     def _init_styles(self):
         """Initialize the styles of the widget"""
         self.setMinimumSize(QSize(self.min_width_px, self.min_height_px))
-        self.setSizePolicy(
-            QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
+        self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
 
     def _init_layout(self):
         """Initialize the layout of the widget"""
@@ -171,12 +179,12 @@ class MATWidget(QWidget):
         # Set the spacing between widgets in the layout
         self.main_layout.setSpacing(0)
         # Set the margins of the layout
-        # self.main_layout.setContentsMargins(
-        #     self.pad_left, 
-        #     self.pad_top, 
-        #     self.pad_right, 
-        #     self.pad_bottom
-        #     ) 
+        self.main_layout.setContentsMargins(
+            self.pad_left, 
+            self.pad_top, 
+            self.pad_right, 
+            self.pad_bottom
+            ) 
         # Attach the layout to the widget
         self.setLayout(self.main_layout)
 
@@ -260,8 +268,8 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # Set global stylesheet
-    # style = compile_styles()
-    # app.setStyleSheet(style)
+    style = compile_styles()
+    app.setStyleSheet(style)
 
     # Define an instance of the MainWindow class
     window = MainWindow()
