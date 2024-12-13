@@ -30,7 +30,7 @@ class MATBox(AspectWidget):
 
     """
     def __init__(self, device: FakeDevice, min_height_px=50, btype="M"):
-        # Initialize MATBox with the properties of QWidget
+        # Initialize MATBox with the properties of AspectWidget
         super().__init__(ratio=1)
 
         # Load device
@@ -87,15 +87,18 @@ class MATBox(AspectWidget):
         # self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
     
     def apply_styles(self):
-        """Reload the stylesheet"""
+        """Change the widget background color based on status"""
         if self.status == "init":
             self.setStyleSheet(f"background-color: {C_STATUS_INIT}")
-        if self.status == "clear":
+        elif self.status == "clear":
             self.setStyleSheet(f"background-color: {C_STATUS_CLEAR}")
-        if self.status == "warn":
+        elif self.status == "warn":
             self.setStyleSheet(f"background-color: {C_STATUS_WARN}")
-        if self.status == "assert":
+        elif self.status == "assert":
             self.setStyleSheet(f"background-color: {C_STATUS_ASSERT}")
+        else:
+            raise ValueError(f"Unknown status value: {self.status}")
+        
         # self.setStyleSheet(self.styles)
 
     def _init_layout(self):
@@ -129,9 +132,11 @@ class MATBox(AspectWidget):
         
 
 class MATWidget(AspectWidget):
-    """The MAT widget"""
+    """
+    The MAT widget
+    """
     def __init__(self, min_height_px=50, padding=0):
-        # Initialize MATWidget with the properties of QWidget
+        # Initialize MATWidget with the properties of AspectWidget
         super().__init__(ratio=3)
 
         # Add properties
@@ -158,7 +163,7 @@ class MATWidget(AspectWidget):
     def _init_device(self):
         """Connect and start the device simulator"""
         self.device = FakeDevice()
-        self.device.runtime = 10
+        self.device.runtime = 30
         self.device.run_threaded()
 
     def _init_status_updates(self):
@@ -277,9 +282,6 @@ if __name__ == "__main__":
 
     # Tell the window to show itself
     window.show()
-
-    # Fake function to show status changing
-    # window.MAT_widget.fake_status_change()
     
     # Start the event loop
     sys.exit(app.exec())

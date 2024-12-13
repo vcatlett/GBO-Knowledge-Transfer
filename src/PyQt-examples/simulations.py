@@ -94,7 +94,7 @@ class FakeDevice(QWidget):
 
     def run(self):
         """Run the simulator"""
-        time.sleep(10)
+        time.sleep(5)
         print(f"Device \"{self.name}\" has started")
         for i in range(self.runtime):
             time.sleep(1)
